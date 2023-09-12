@@ -15,8 +15,7 @@ export default function Login({ setToken }) {
                 user_email,
                 user_password
             });
-            console.log(token);
-            // setToken(token);
+            setToken(token);
         } else {
             e.preventDefault();
             setError('*Email có định dạng: @gmail.com');
