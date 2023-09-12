@@ -2,15 +2,26 @@ import React, { useState } from "react";
 import PropTypes from 'prop-types'
 import "./Login.css";
 export default function Login({ setToken }) {
-    const [username, setUserName] = useState('');
-    const [password, setPassword] = useState('');
+    const [user_email, setUserEmail] = useState('');
+    const [user_password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const validateEmail = (email) => {
+        return /\S+@+gmail.com/.test(email);
+    }
     const handleSubmit = async e => {
-        e.preventDefault();
-        const token = await loginUser({
-            username,
-            password
-        });
-        setToken(token);
+        if (!validateEmail) {
+            e.preventDefault();
+            const token = await loginUser({
+                user_email,
+                user_password
+            });
+            console.log(token);
+            // setToken(token);
+        } else {
+            e.preventDefault();
+            setError('*Email có định dạng: @gmail.com');
+        }
+
     }
     return (
         <div className="container-web">
@@ -18,18 +29,18 @@ export default function Login({ setToken }) {
                 <img className="logo" src={"/logoshop.png"} alt="logo" />
                 <h3>Đăng nhập</h3>
                 <div className="error">
-
+                    {error}
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <div class="input-wrapper">
-                        <input value={username} onChange={i => setUserName(i.target.value)} type="text" id="user" required />
-                        <label for="user">user name</label>
+                    <div className="input-wrapper">
+                        <input value={user_email} onChange={i => setUserEmail(i.target.value)} type="email" id="user" required />
+                        <label for="user">user email</label>
                     </div>
-                    <div class="input-wrapper">
-                        <input onChange={i => setPassword(i.target.value)} type="password" required />
+                    <div className="input-wrapper">
+                        <input onChange={i => setPassword(i.target.value)} minLength={6} type="password" required />
                         <label for="user">password</label>
                     </div>
-                    <button class="button-71">Đăng nhập</button>
+                    <button className="button-71">Đăng nhập</button>
                 </form>
             </div>
         </div>
@@ -38,7 +49,7 @@ export default function Login({ setToken }) {
 
 async function loginUser(credentials) {
     //sửa đổi link cho phù hợp
-    return fetch('http://localhost:8080/login', {
+    return fetch('http://localhost:8080/v1/api/access/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
