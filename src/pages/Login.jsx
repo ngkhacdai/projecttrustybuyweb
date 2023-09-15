@@ -1,21 +1,26 @@
 import React, { useState } from "react";
 import PropTypes from 'prop-types'
-import "./Login.css";
+import "../styles/Login.css";
+import { useNavigate } from "react-router-dom";
 export default function Login({ setToken }) {
     const [user_email, setUserEmail] = useState('');
     const [user_password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
     const validateEmail = (email) => {
-        return /\S+@+gmail.com/.test(email);
-    }
-    const handleSubmit = async e => {
-        if (!validateEmail) {
+        const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        return emailRegex.test(email);
+    };
+    const handleSubmit = async (e) => {
+        if (validateEmail(user_email)) {
             e.preventDefault();
             const token = await loginUser({
                 user_email,
                 user_password
             });
+
             setToken(token);
+            navigate('/');
         } else {
             e.preventDefault();
             setError('*Email có định dạng: @gmail.com');
@@ -39,7 +44,7 @@ export default function Login({ setToken }) {
                         <input onChange={i => setPassword(i.target.value)} minLength={6} type="password" required />
                         <label for="user">password</label>
                     </div>
-                    <button className="button-71">Đăng nhập</button>
+                    <button type="submit" className="button-71">Đăng nhập</button>
                 </form>
             </div>
         </div>
