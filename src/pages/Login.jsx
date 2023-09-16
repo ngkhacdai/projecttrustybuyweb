@@ -18,9 +18,13 @@ export default function Login({ setToken }) {
                 user_email,
                 user_password
             });
-
-            setToken(token);
-            navigate('/');
+            if (token.status === 'error') {
+                setError('*Sai tài khoản hoặc mật khẩu')
+                console.log(token);
+            } else {
+                setToken(token);
+                navigate('/');
+            }
         } else {
             e.preventDefault();
             setError('*Email có định dạng: @gmail.com');
@@ -30,7 +34,7 @@ export default function Login({ setToken }) {
     return (
         <div className="container-web">
             <div className="customform">
-                <img className="logo" src={"/logoshop.png"} alt="logo" />
+                <img className="logo" src={"/logo.png"} alt="logo" />
                 <h3>Đăng nhập</h3>
                 <div className="error">
                     {error}
